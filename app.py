@@ -81,7 +81,9 @@ def train():
         return jsonify(result)
     
     except Exception as e:
-        return jsonify({'status': 'error', 'message': str(e)}), 400
+        # Log the error internally but don't expose stack trace
+        app.logger.error(f"Training error: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'An error occurred during training'}), 400
 
 
 @app.route('/predict', methods=['POST'])
@@ -117,7 +119,9 @@ def predict():
         return jsonify(result)
     
     except Exception as e:
-        return jsonify({'status': 'error', 'message': str(e)}), 400
+        # Log the error internally but don't expose stack trace
+        app.logger.error(f"Prediction error: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'An error occurred during prediction'}), 400
 
 
 @app.errorhandler(404)
@@ -133,4 +137,6 @@ def internal_error(error):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Note: Do not use debug=True in production
+    # Debug mode should only be enabled in development environments
+    app.run(debug=False)
