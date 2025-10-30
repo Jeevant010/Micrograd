@@ -8,9 +8,9 @@ setup(
     author_email='example@example.com',
     packages=find_packages(),
     install_requires=[
-        'numpy>=1.21.0',
-        'flask>=2.0.0',
-        'torch>=1.9.0',
+        'numpy>=1.21.0,<2.0.0',
+        'flask>=2.0.0,<3.0.0',
+        'torch>=1.9.0,<3.0.0',
     ],
     python_requires='>=3.7',
     classifiers=[

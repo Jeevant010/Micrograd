@@ -93,8 +93,19 @@ def predict():
         # Extract input data
         inputs = data.get('inputs', [])
         
+        # Validate inputs
         if not inputs:
             return jsonify({'status': 'error', 'message': 'No input data provided'}), 400
+        
+        if not isinstance(inputs, list):
+            return jsonify({'status': 'error', 'message': 'Inputs must be a list'}), 400
+        
+        # Validate input types (expecting numerical data)
+        try:
+            # Attempt to convert to floats to validate
+            _ = [float(x) for x in inputs]
+        except (ValueError, TypeError):
+            return jsonify({'status': 'error', 'message': 'All inputs must be numeric'}), 400
         
         # Simulate prediction
         result = {

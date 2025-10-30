@@ -47,6 +47,9 @@ class GenerativeDataset:
 class TextDataset:
     """Text dataset for language model training."""
     
+    UNKNOWN_TOKEN = '<UNK>'
+    UNKNOWN_IDX = 0
+    
     def __init__(self, texts=None, vocab_size=1000):
         self.vocab_size = vocab_size
         self.texts = texts if texts is not None else self._generate_sample_texts()
@@ -65,8 +68,8 @@ class TextDataset:
     
     def _build_vocab(self):
         """Build vocabulary from texts."""
-        vocab = {}
-        idx = 0
+        vocab = {self.UNKNOWN_TOKEN: self.UNKNOWN_IDX}
+        idx = 1
         for text in self.texts:
             for word in text.lower().split():
                 if word not in vocab:
@@ -77,7 +80,7 @@ class TextDataset:
     def tokenize(self, text):
         """Convert text to token indices."""
         words = text.lower().split()
-        return [self.vocab.get(word, 0) for word in words]
+        return [self.vocab.get(word, self.UNKNOWN_IDX) for word in words]
     
     def __len__(self):
         return len(self.texts)

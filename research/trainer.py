@@ -5,7 +5,12 @@ Implements training logic for generative models using the dataset module.
 
 import sys
 import os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Add parent directory to path for imports
+# This allows importing template.py from parent directory
+parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if parent_dir not in sys.path:
+    sys.path.insert(0, parent_dir)
 
 from dataset import load_dataset, save_dataset
 from template import TrainerTemplate
@@ -32,8 +37,13 @@ class GenerativeModelTrainer(TrainerTemplate):
         # 3. Backward pass
         # 4. Update parameters
         
+        # Ensure inputs and targets have same length
+        min_len = min(len(inputs), len(targets))
+        inputs = inputs[:min_len]
+        targets = targets[:min_len]
+        
         # Simulated loss for demonstration
-        loss = sum(abs(i - t) for i, t in zip(inputs, targets)) / len(inputs)
+        loss = sum(abs(i - t) for i, t in zip(inputs, targets)) / len(inputs) if len(inputs) > 0 else 0
         return loss
     
     def train(self, dataset, epochs=10, verbose=True):
